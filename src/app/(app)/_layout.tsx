@@ -1,13 +1,13 @@
-import { Redirect } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 
 import { LoadingState } from '@/components/ui';
 import { useAuth } from '@/features/auth/auth-provider';
 
-export default function EntryRoute() {
+export default function AppLayout() {
   const { hasCompletedOnboarding, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <LoadingState label="Opening QuotePilot" />;
+    return <LoadingState label="Loading workspace" />;
   }
 
   if (!isAuthenticated) {
@@ -18,5 +18,5 @@ export default function EntryRoute() {
     return <Redirect href="/business" />;
   }
 
-  return <Redirect href="/dashboard" />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
