@@ -1,17 +1,17 @@
 const SUPABASE_URL_KEY = 'EXPO_PUBLIC_SUPABASE_URL';
-const SUPABASE_KEY_KEY = 'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY';
+const SUPABASE_KEY_KEY = 'EXPO_PUBLIC_SUPABASE_KEY';
 
 type SupabaseEnv =
   | {
-      isConfigured: true;
-      publishableKey: string;
-      url: string;
-    }
+    isConfigured: true;
+    publishableKey: string;
+    url: string;
+  }
   | {
-      isConfigured: false;
-      message: string;
-      missing: string[];
-    };
+    isConfigured: false;
+    message: string;
+    missing: string[];
+  };
 
 function readEnvValue(key: string) {
   return process.env[key]?.trim() ?? '';
