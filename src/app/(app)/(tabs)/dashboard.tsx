@@ -8,6 +8,7 @@ import { ScreenHeader } from '@/features/shell/screen-header';
 import { useTheme } from '@/hooks/use-theme';
 
 const newClientRoute = '/clients/new' as Href;
+const newEstimateRoute = '/estimates/new' as Href;
 
 export default function DashboardScreen() {
   const { isDemo } = useAuth();
@@ -28,13 +29,13 @@ export default function DashboardScreen() {
       </View>
       <Card>
         <StatusBadge label={isDemo ? 'Demo shell' : 'Account shell'} tone="success" />
-        <Text style={[styles.cardTitle, { color: theme.text }]}>Clients and setup are ready</Text>
+        <Text style={[styles.cardTitle, { color: theme.text }]}>Estimates are ready</Text>
         <Text style={[styles.cardCopy, { color: theme.textSecondary }]}>
-          Client records and saved services are available now. Estimates, invoices, PDFs, and follow-ups remain future
-          phases.
+          Create estimates with clients, saved services, quick draft items, and status tracking. PDFs and invoices remain
+          future phases.
         </Text>
         <View style={styles.actions}>
-          <Button disabled variant="secondary">
+          <Button onPress={() => router.push(newEstimateRoute)} variant="secondary">
             New estimate
           </Button>
           <Button onPress={() => router.push(newClientRoute)} variant="ghost">
