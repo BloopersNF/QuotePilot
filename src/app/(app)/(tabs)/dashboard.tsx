@@ -1,3 +1,4 @@
+import { router, type Href } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button, Card, MetricTile, Screen, StatusBadge } from '@/components/ui';
@@ -5,6 +6,8 @@ import { Spacing, Typography } from '@/constants/theme';
 import { useAuth } from '@/features/auth/auth-provider';
 import { ScreenHeader } from '@/features/shell/screen-header';
 import { useTheme } from '@/hooks/use-theme';
+
+const newClientRoute = '/clients/new' as Href;
 
 export default function DashboardScreen() {
   const { isDemo } = useAuth();
@@ -15,7 +18,7 @@ export default function DashboardScreen() {
       <ScreenHeader
         eyebrow="Today"
         title="Dashboard"
-        subtitle="A focused snapshot for quotes, invoices, and follow-ups. Live business data starts in Phase 3."
+        subtitle="A focused snapshot for quotes, invoices, and follow-ups as the workflow fills in."
       />
       <View style={styles.grid}>
         <MetricTile label="Estimates" style={styles.metric} value="0" />
@@ -25,15 +28,16 @@ export default function DashboardScreen() {
       </View>
       <Card>
         <StatusBadge label={isDemo ? 'Demo shell' : 'Account shell'} tone="success" />
-        <Text style={[styles.cardTitle, { color: theme.text }]}>Ready for the core workflow</Text>
+        <Text style={[styles.cardTitle, { color: theme.text }]}>Clients and setup are ready</Text>
         <Text style={[styles.cardCopy, { color: theme.textSecondary }]}>
-          Clients, estimates, invoices, PDFs, and follow-ups are intentionally placeholders until the next phases.
+          Client records and saved services are available now. Estimates, invoices, PDFs, and follow-ups remain future
+          phases.
         </Text>
         <View style={styles.actions}>
           <Button disabled variant="secondary">
             New estimate
           </Button>
-          <Button disabled variant="ghost">
+          <Button onPress={() => router.push(newClientRoute)} variant="ghost">
             Add client
           </Button>
         </View>

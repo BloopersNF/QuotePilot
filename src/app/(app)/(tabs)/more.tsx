@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/auth-provider';
 import { ScreenHeader } from '@/features/shell/screen-header';
 import { useTheme } from '@/hooks/use-theme';
 
+const servicesRoute = '/services' as Href;
 const settingsRoute = '/settings' as Href;
 
 export default function MoreScreen() {
@@ -42,6 +43,15 @@ export default function MoreScreen() {
         </Text>
         <Button fullWidth onPress={() => router.push(settingsRoute)} variant="secondary">
           View business profile
+        </Button>
+      </Card>
+      <Card>
+        <Text style={[styles.title, { color: theme.text }]}>Saved services</Text>
+        <Text style={[styles.copy, { color: theme.textSecondary }]}>
+          Manage reusable labor, material, fee, and service items for future estimates.
+        </Text>
+        <Button fullWidth onPress={() => router.push(servicesRoute)} variant="secondary">
+          Manage saved services
         </Button>
       </Card>
       <Button fullWidth onPress={handleLogout} variant="danger">
