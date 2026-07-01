@@ -1,18 +1,28 @@
 import { router } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
-import { Button, Card, Input, Screen, StatusBadge } from '@/components/ui';
+import { Button, Card, ErrorState, Screen, StatusBadge } from '@/components/ui';
 import { Spacing, Typography } from '@/constants/theme';
 import { useAuth } from '@/features/auth/auth-provider';
+import { BusinessProfileForm } from '@/features/business/business-profile-form';
+import type { BusinessProfileUpsert } from '@/features/business/business-profile.types';
 import { ScreenHeader } from '@/features/shell/screen-header';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function BusinessOnboardingScreen() {
-  const { completeOnboarding, isDemo } = useAuth();
+  const { businessProfile, completeOnboarding, env, isDemo, saveBusinessProfile, workspaceError } = useAuth();
   const theme = useTheme();
 
-  async function handleFinish() {
-    await completeOnboarding();
+  async function handleSubmit(values: BusinessProfileUpsert) {
+    if (isDemo) {
+      await completeOnboarding();
+      return { ok: true as const };
+    }
+
+    return saveBusinessProfile(values);
+  }
+
+  function handleSuccess() {
     router.replace('/dashboard');
   }
 
@@ -21,19 +31,34 @@ export default function BusinessOnboardingScreen() {
       <ScreenHeader
         eyebrow="Business setup"
         title="Set up your business profile"
-        subtitle="This placeholder keeps the onboarding route ready. Full profile fields arrive in Phase 3."
+        subtitle="Add the defaults that will appear on future estimates and invoices."
       />
       <Card>
         <StatusBadge label={isDemo ? 'Demo mode' : 'Signed in'} tone="success" />
         <Text style={[styles.copy, { color: theme.textSecondary }]}>
-          The final version will collect business name, trade, country, currency, tax rate, terms, and payment details here.
+          Keep this lightweight for now. You can refine these defaults later from settings.
         </Text>
-        <Input editable={false} label="Business name" placeholder="Phase 3 field placeholder" />
-        <Input editable={false} label="Country" placeholder="Canada, United Kingdom, Australia, Ireland" />
-        <Button fullWidth onPress={handleFinish}>
-          Finish setup placeholder
-        </Button>
+        {!env.isConfigured && !isDemo ? (
+          <ErrorState
+            title="Supabase is not configured"
+            message={`${env.message} Missing: ${env.missing.join(', ')}.`}
+          />
+        ) : workspaceError && !isDemo ? (
+          <ErrorState title="Unable to load workspace" message={workspaceError} />
+        ) : (
+          <BusinessProfileForm
+            businessProfile={businessProfile}
+            onSubmit={handleSubmit}
+            onSuccess={handleSuccess}
+            submitLabel={isDemo ? 'Continue demo' : 'Save and continue'}
+          />
+        )}
       </Card>
+      {isDemo ? (
+        <Button fullWidth onPress={handleSuccess} variant="ghost">
+          Skip setup in demo mode
+        </Button>
+      ) : null}
     </Screen>
   );
 }

@@ -1,21 +1,22 @@
 import { forwardRef } from 'react';
-import { StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
+import { StyleSheet, Text, TextInput, type StyleProp, type TextInputProps, type ViewStyle, View } from 'react-native';
 
 import { Radius, Spacing, Typography } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type InputProps = TextInputProps & {
+  containerStyle?: StyleProp<ViewStyle>;
   error?: string;
   helperText?: string;
   label: string;
 };
 
 export const Input = forwardRef<TextInput, InputProps>(
-  ({ error, helperText, label, style, ...props }, ref) => {
+  ({ containerStyle, error, helperText, label, style, ...props }, ref) => {
     const theme = useTheme();
 
     return (
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, containerStyle]}>
         <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
         <TextInput
           ref={ref}

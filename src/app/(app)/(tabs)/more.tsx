@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
 import { Button, Card, Screen, StatusBadge } from '@/components/ui';
@@ -7,8 +7,10 @@ import { useAuth } from '@/features/auth/auth-provider';
 import { ScreenHeader } from '@/features/shell/screen-header';
 import { useTheme } from '@/hooks/use-theme';
 
+const settingsRoute = '/settings' as Href;
+
 export default function MoreScreen() {
-  const { env, isDemo, signOut, user } = useAuth();
+  const { businessProfile, env, isDemo, signOut, user } = useAuth();
   const theme = useTheme();
 
   async function handleLogout() {
@@ -26,17 +28,21 @@ export default function MoreScreen() {
       <Card>
         <StatusBadge label={isDemo ? 'Demo mode' : 'Signed in'} tone="success" />
         <Text style={[styles.title, { color: theme.text }]}>
-          {isDemo ? 'QuotePilot demo session' : user?.email ?? 'QuotePilot account'}
+          {isDemo ? 'QuotePilot demo session' : businessProfile?.business_name ?? user?.email ?? 'QuotePilot account'}
         </Text>
         <Text style={[styles.copy, { color: theme.textSecondary }]}>
-          Supabase env: {env.isConfigured ? 'configured' : 'missing'}. Database-backed settings begin in Phase 3.
+          Supabase env: {env.isConfigured ? 'configured' : 'missing'}. Business profile:{' '}
+          {businessProfile ? 'saved' : isDemo ? 'local demo' : 'missing'}.
         </Text>
       </Card>
       <Card>
-        <Text style={[styles.title, { color: theme.text }]}>Coming later</Text>
+        <Text style={[styles.title, { color: theme.text }]}>Settings</Text>
         <Text style={[styles.copy, { color: theme.textSecondary }]}>
-          Settings, follow-ups, pricing, and document defaults stay out of this Phase 1/2 build.
+          View your saved business defaults. Editing and richer settings can come after the core workflows.
         </Text>
+        <Button fullWidth onPress={() => router.push(settingsRoute)} variant="secondary">
+          View business profile
+        </Button>
       </Card>
       <Button fullWidth onPress={handleLogout} variant="danger">
         Log out
